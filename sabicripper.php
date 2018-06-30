@@ -51,6 +51,8 @@
                 echo "CLI Usage: \nphp ".$argv[0]." http://www.example.com /MyDirectoryThatIWantImagesIn \n";
                 die();
             }else {
+                echo "Creating Directory. Standby.\n";
+                $this->generateDirectory($this->dir);
                 echo "Source: ".$this->source ."\n";
                 echo "Directory: ".$this->dir ."\n";
                 echo "CWD: ". getcwd() ."\n";
@@ -121,9 +123,8 @@
          */
         public function downloadFile($path){
             echo "Grabbing File:" .$path."\n";
-            shell_exec("wget ".$path);
-            echo "Attempting to place in ".$this->dir;
-            rename()
+            shell_exec("wget -P".$this->getDirectory()." ".$path);
+            //echo "Attempting to place ".basename($path)." in ".$this->getDirectory();
         }
         
         /**
@@ -344,10 +345,22 @@
         }
 
         /**
-         * Returns directory for images
+         * Returns directory for downloads
          */
         public function getDirectory(){
             return $this->formatDirectory($this->dir);
+        }
+
+        /**
+         * @param string $directory
+         * Checks to see if directory exists and if it doesn't. Creates it.
+         */
+        public function generateDirectory($directory){
+            if(file_exists($directory)){
+                echo "Directory Exists! Continuing...\n";
+            }else {
+                mkdir("./".$directory);
+            }
         }
     }
 ?>
