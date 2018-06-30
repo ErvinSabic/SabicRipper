@@ -39,7 +39,7 @@
             \____/ \__,_|_.__/|_|\___| \_| \_|_| .__/| .__/ \___|_|   \n
                                                | |   | |              \n
                                                |_|   |_|           \n
-            ";
+            \n ";
 
             if($this->count > 3 || $this->count < 3){
                 if($this->count > 3) $this->throwError("Too Many Arguments", false);
@@ -53,6 +53,7 @@
             }else {
                 echo "Source: ".$this->source ."\n";
                 echo "Directory: ".$this->dir ."\n";
+                echo "CWD: ". getcwd() ."\n";
             }
         }
 
@@ -108,7 +109,8 @@
                 echo "Scraping: ".$location;
                 $fname = basename($location);
                 //$this->downloadFile($location, $this->formatDirectory($this->dir).$fname);
-                file_put_contents($this->formatDirectory($this->dir).$fname,$this->downloadFile($location));
+                $this->downloadFile($location);
+                //shell_exec("mv ".$fname." ".$this->getDirectory());
             }
         }
 
@@ -118,13 +120,10 @@
          * Checks to see if a file exists and is readable then if it is, downloads it. 
          */
         public function downloadFile($path){
-            if(!file_exists($path)){
-                echo "File does not exist! \n";
-            }
-            if(!is_readable($path)){
-                echo "File is not readable! \n";
-            };
-            return file_get_contents(trim($path));
+            echo "Grabbing File:" .$path."\n";
+            shell_exec("wget ".$path);
+            echo "Attempting to place in ".$this->dir;
+            rename()
         }
         
         /**
@@ -348,7 +347,7 @@
          * Returns directory for images
          */
         public function getDirectory(){
-            return $this->dir;
+            return $this->formatDirectory($this->dir);
         }
     }
 ?>
